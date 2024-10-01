@@ -1,4 +1,4 @@
-baseURL = 'https://blog.perfectroot.wiki/'
+baseURL = 'https://blog.perfectroot.wiki'
 languageCode = 'en-us'
 title = 'P3rfectr00t'
 theme = 'hugo-theme-stack'
