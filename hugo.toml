@@ -1,0 +1,39 @@
+baseURL = 'https://example.org/'
+languageCode = 'en-us'
+title = 'My New Hugo Site'
+theme = 'hugo-theme-stack'
+timeZone = 'Africa/Nairobi'
+
+[menu]
+[[menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 10
+    identifier = "home"
+    [menu.main.params]
+        icon = "home"
+        newTab = true
+[[menu.main]]
+    name = "Archives"
+    url = "/archives"
+    weight = 20
+    identifier = "Archives"
+    [menu.main.params]
+        icon = "archives"
+        newTab = true
+[[menu.main]]
+    name = "Search"
+    url = "/search"
+    weight = 30
+    identifier = "Search"
+    [menu.main.params]
+        icon = "search"
+        newTab = true
+[[menu.main]]
+    name = "Links"
+    url = "/links"
+    weight = 40
+    identifier = "Links"
+    [menu.main.params]
+        icon = "link"
+        newTab = true
