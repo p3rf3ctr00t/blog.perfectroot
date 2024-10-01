@@ -2,11 +2,11 @@
 mainSections = ["post"]
 # Output page's full content in RSS.
 rssFullContent = true
-favicon = "/favicon.png"
+favicon = "/avatar.png"
 
 [footer]
-since = 2020
-customText = ""
+since = 2022
+customText = "insert {flag} here"
 
 #[dateFormat]
 #published = "Oct 01, 2024"
