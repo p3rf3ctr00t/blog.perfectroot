@@ -58,7 +58,7 @@ timeZone = 'Africa/Nairobi'
     name = "linkedin"
     url = "https://www.linkedin.com/company/p3rf3ctr00t/"
     weight = 20
-    identifier = "linkedi"
+    identifier = "linkedin"
     [menu.social.params]
         icon ="brand-linkedin"
         newTab = false
