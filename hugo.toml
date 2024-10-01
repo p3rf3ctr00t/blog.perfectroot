@@ -1,6 +1,6 @@
-baseURL = 'https://example.org/'
+baseURL = 'https://blog.perfectroot.wiki/'
 languageCode = 'en-us'
-title = 'My New Hugo Site'
+title = 'P3rfectr00t'
 theme = 'hugo-theme-stack'
 timeZone = 'Africa/Nairobi'
 
@@ -12,7 +12,7 @@ timeZone = 'Africa/Nairobi'
     identifier = "home"
     [menu.main.params]
         icon = "home"
-        newTab = true
+        newTab = false
 [[menu.main]]
     name = "Archives"
     url = "/archives"
@@ -20,7 +20,7 @@ timeZone = 'Africa/Nairobi'
     identifier = "Archives"
     [menu.main.params]
         icon = "archives"
-        newTab = true
+        newTab = false
 [[menu.main]]
     name = "Search"
     url = "/search"
@@ -28,7 +28,7 @@ timeZone = 'Africa/Nairobi'
     identifier = "Search"
     [menu.main.params]
         icon = "search"
-        newTab = true
+        newTab = false
 [[menu.main]]
     name = "Links"
     url = "/links"
@@ -36,4 +36,29 @@ timeZone = 'Africa/Nairobi'
     identifier = "Links"
     [menu.main.params]
         icon = "link"
-        newTab = true
+        newTab = false
+
+ [[menu.social]]
+    name = "github"
+    url = "https://github.com/p3rf3ctr00t/"
+    weight = 10
+    identifier = "Github"
+    [menu.social.params]
+        icon ="brand-github"
+        newTab = false
+ [[menu.social]]
+    name = "X"
+    url = "https://x.com/p3rf3ctr00t"
+    weight = 20
+    identifier = "X"
+    [menu.social.params]
+        icon ="brand-twitter"
+        newTab = false
+ [[menu.social]]
+    name = "linkedin"
+    url = "https://www.linkedin.com/company/p3rf3ctr00t/"
+    weight = 20
+    identifier = "linkedi"
+    [menu.social.params]
+        icon ="brand-linkedin"
+        newTab = false
