@@ -12,6 +12,10 @@ links:
   - title: LordSudo
     description: Lordsudo innit
     website: https://lordsudo.xyz/
+
+  - title: Kai
+    description: I am only human
+    website: https://khakai.github.io/
     # TO DO
     # Add everyone's profiles from the team
 ---
