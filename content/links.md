@@ -11,7 +11,7 @@ links:
     
   - title: LordSudo
     description: Lordsudo innit
-    website: LordSudo.xyz
+    website: https://lordsudo.xyz/
     # TO DO
     # Add everyone's profiles from the team
 ---
