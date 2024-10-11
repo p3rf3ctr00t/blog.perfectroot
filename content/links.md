@@ -8,6 +8,10 @@ links:
     description: Boynamedboy's blog.
     website: https://blog.iboysec.me
     image: https://avatars.fastly.steamstatic.com/9af40230349e4b3305650a2657039c068122a895_full.jpg
+    
+  - title: LordSudo
+    description: Lordsudo innit
+    website: LordSudo.xyz
     # TO DO
     # Add everyone's profiles from the team
 ---
