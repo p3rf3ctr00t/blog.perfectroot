@@ -16,7 +16,7 @@ In this blog post we will explore what LFI is, how it works, and how attackers e
 
 ## Introduction
 
-Local File Inclusion is a vulnerability that allows an attecker to include a file mostly by exploiting a dynamic file inclusion mechanism implemented on the target. The vulnerability occurs due to the use of user supllied input without proper validation. This means that an attacker is allowed to include files on a server through a web browser and allows the attacker to manipulate the input and inject path traversal charachters and include other files from the web server. In other cases an attacker might be able to write arbitiary files on the server allowing the modification of application data or behaviour and full control of the server.
+Local File Inclusion is a vulnerability that allows an attacker to include a file mostly by exploiting a dynamic file inclusion mechanism implemented on the target. The vulnerability occurs due to the use of user supllied input without proper validation. This means that an attacker is allowed to include files on a server through a web browser and allows the attacker to manipulate the input and inject path traversal charachters and include other files from the web server. In other cases an attacker might be able to write arbitiary files on the server allowing the modification of application data or behaviour and full control of the server.
 
 All this can lead to something as outputting the file contents, but depending on the severity, it can also lead to:
 1. code execution on the web server.
