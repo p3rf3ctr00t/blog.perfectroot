@@ -17,9 +17,9 @@ links:
     description: I am only human
     website: https://khakai.github.io/
 
-    - title: 0xEpitome
-    description: The Epitome of knowledge 
-    website: https://0xepitome.github.io/
+  - title: 0xEpitome
+  description: The Epitome of knowledge 
+  website: https://0xepitome.github.io/
     # TO DO
     # Add everyone's profiles from the team
 ---
