@@ -10,9 +10,11 @@ Author: '[0xEpitome](https://x.com/0xEpitome)'
 comments: true
 ---
 
-![image](images/derby.png)
+![image](perfectrootctf2024/derby.png)
+
 Here we are given a zip file with the password as `infected`, this was extracting a PS1 file
-![image](20241119211157.png)
+
+![image](perfectrootctf2024/20241119211157.png)
 
 The best way to decode a powershell file is to let the script do the heavy lifting, in the code we see an iex (Invoke-Expression). The Invoke-Expression cmdlet returns the output of the expression or command after evaluating or running a given string as a command. A string entered at the command line is echoed or unaltered in the absence of invoke-expression. 
 The script generally does the following:
@@ -23,14 +25,17 @@ The script generally does the following:
 - **Stream Reading**: The decompressed data is treated as a stream and read as text using ASCII encoding.
 
 So we can remove the iex cmdlet and assign the rest of the string to a variable
-![image](20241119212457.png)
+
+![image](perfectrootctf2024/20241119212457.png)
 
 Then we can just ran the variable, to see its contents:
-![image](20241119212611.png)
+
+![image](perfectrootctf2024/20241119212611.png)
 
 This script is a simple script I copied from [github]( https://github.com/Whitecat18/Powershell-Scripts-for-Hackers-and-Pentesters) that outputs the system information of a machine, apart from the script we see random comments, which are what seem like base64 code, compile them and decode them to see what they are:
  Cyberchef is way does it way easier
- ![image](20241119213310.png)
+ 
+ ![image](perfectrootctf2024/20241119213310.png)
 
 The decoded base64:
 ```powershell
@@ -57,7 +62,7 @@ Write-Host "Flag: $decodedString"
 the '@' allows us to pass multiple parameters to a variable, running it gives us the flag.
 `{w4rmup_t00_E4sy_1f_y0u_Ask_m3_8b5c6452b7348b95cede504aff4801f9}`
 
-![image](20241119214539.png)
+![image](perfectrootctf2024/20241119214539.png)
 
 ## Comments
 

@@ -14,7 +14,7 @@ The aim of this challenge was supposed to be as guessy as possible, hence the na
 
 ```
 Challenge Description
-Author: [0xEpitome](https://x.com/0xEpitome)
+
 
 Sanity? More Like Insanity
 
@@ -74,32 +74,32 @@ The description literally had everything you need i.e ***multiple ways*** so if 
 
 
 If you sent the bot the encoded base64 for flag, Flag or FLAG eg `ZmxhZwo=`
-![image](images/20241116125627.png)
+![image](perfectrootctf2024/20241116125627.png)
 
 It sends a very weird text. This is just twitter text steg. In the hint it said something about twitter steg, I found this [tool](https://holloway.nz/steg/) for encoding and decoding also.
 Copy the first message to decode and you will get this.
 
-![image](images/20241116134308.png)
+![image](perfectrootctf2024/20241116134308.png)
 
 2nd one!!
-![image](images/20241116134426.png)
+![image](perfectrootctf2024/20241116134426.png)
 
 If you open the 2 pastebins i.e
 `pastebin.pl/view/e205c8c5`
 `pastebin.pl/view/b67382bf`
 
 The first one you will get what you are looking for, Rick Roll!!!
-![image](images/rickroll-roll.gif)
+![image](perfectrootctf2024/rickroll-roll.gif)
 
 The 2nd one will take you a Gdrive link with a text file with a python code
-![image](images/20241116135002.png)
+![image](perfectrootctf2024/20241116135002.png)
 
 The script is pretty easy to understand, it takes a a string encoded in base64 and executes it as below:
-![image](images/20241116135208.png)
+![image](perfectrootctf2024/20241116135208.png)
 
 We see there are 3 functions 1 to print the flag, obviously a lie, 2nd to print a random fact and 3 there's some xor and we are given the hex, well you just need the xor key and try to decode the hex, the key was now in the poem provided in the description, if you observed there were some bolded characters `MQKWYXAPCTFLZ(0)DQR;GHFS`
 Paste this to the code:
-![image](images/20241116135457.png)
+![image](perfectrootctf2024/20241116135457.png)
  Get the Flag 
  `r00t{Vh4t_W4snt_s0_b4d_w4s_IT_cf746daed369deab237423a689181b0da1a71366b6464402ff1d33157701f37c}`
 
