@@ -10,8 +10,17 @@ comments: true
 
 ---
 ## Introduction
+Blind SQL Injection (Blind SQLi) is a more advanced and subtle type of SQL injection vulnerability where an attacker cannot directly view the results of their injected query. Unlike traditional SQL injections, where an attacker can see error messages or query results returned in the HTTP response, Blind SQL Injection does not reveal any information from the database directly. Instead, attackers must rely on the application's behavior, such as response time or page content changes, to infer the outcome of their queries.
 
-Occurs when an application is vulnerable to SQL injections but the HTTP responses does not contain any results of the relevant SQL query or details of any database errors. This type of attack asks the database boolean questions and determines the answer based on the application's response. Therefore the attacker never sees the output of any SQL queries making it a more complex technique even though the consequences remain similar.  There are ways to approach this including: 
+This technique is often used when an application fails to properly handle SQL queries, leaving it vulnerable to attackers who can manipulate the SQL statements. The lack of direct feedback makes Blind SQL Injection more challenging to detect and exploit, but the potential consequences—such as unauthorized access to sensitive data—are just as severe.
+
+Blind SQL Injection is generally categorized into two types:
+
+Boolean-based Blind SQL Injection: This approach involves asking the database true or false questions and observing the application's response to determine if the condition is true or false.
+
+Time-based Blind SQL Injection: In this case, the attacker injects SQL queries that introduce a time delay in the database's response. By measuring the response time, the attacker can deduce whether the condition in the query is true or false.
+
+Both techniques allow attackers to extract sensitive information from the database without directly seeing the data returned by the queries. In this post, we’ll explore the mechanics of Blind SQL Injection, how to identify vulnerabilities, and methods to mitigate these risks.
 
 ### Boolean-Based Blind Injecion
 
