@@ -3,7 +3,7 @@ title: Oski Lab
 Date: 2025-04-19
 image: avatar.png
 autoimage: yes
-description: Threat Intel Lab | CyberDefenders
+description: Epitome / L0rdSud0 
 Categories: Threat Intel
 author: Epitome / L0rdSud0
 comments: true
