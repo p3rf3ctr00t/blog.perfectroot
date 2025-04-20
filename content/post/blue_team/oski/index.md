@@ -1,3 +1,4 @@
+---
 title: Oski Lab
 Date: 2025-04-19
 image: avatar.png
@@ -37,7 +38,7 @@ In any run report: In malware configuration, we see some interesting data and st
 
 We see any run already suggested the C2 and also RC4 key, and some strings run which does some sort of deletion on programdata.
 
-### Questions.
+## Questions.
 1. Determining the creation time of the malware can provide insights into its origin. What was the time of malware creation?
 ```ANS: 2022-09-28 17:40```
 This answer we already found in VT in details tab
@@ -84,5 +85,12 @@ Basic explanation of the command is launches cmd.exe and waits 5 seconds and del
 ```ANS: 5```
 The waiting of 5 seconds in the above command is the number it waits for self deletion
 
-### Lessons Learnt
+## Lessons Learnt
 This was an engaging lab which through a single has we realized the importance of simple threat intel from VirusTotal to some further analysis on any run. The file is an info stealer which used a C2 for point of download itself and its related dll files. It also used RC4 encryption and after executing it opened cmd shell to self delete together with all .dll files.
+
+## Comments
+
+{{< chat disqus_thread >}}
+
+
+---
