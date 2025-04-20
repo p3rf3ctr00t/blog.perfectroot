@@ -79,14 +79,14 @@ In any run, we see the malware opens cmd.exe and executes the command:
 ```bash
 "C:\Windows\system32\cmd.exe" /c timeout /t 5 & del /f /q "C:\Users\admin\AppData\Local\Temp\VPN.exe" & del "C:\ProgramData\*.dll"" & exit
 ```
-Basic explanation of the command is launches cmd.exe and waits 5 seconds and deletes vpn.exe (our file) located in Temp folder and deletes all .dll files in ProgramData and then exits the cmd shelll.
+Basic explanation of the command is, it launches cmd.exe and waits 5 seconds and deletes vpn.exe (our file) located in Temp folder and deletes all .dll files in ProgramData and then exits the cmd shelll.
 
 7. Understanding the malware's behavior post-data exfiltration can give insights into its evasion techniques. After successfully exfiltrating the user's data, how many seconds does it take for the malware to self-delete?
 ```ANS: 5```
-The waiting of 5 seconds in the above command is the number it waits for self deletion
+The waiting of 5 seconds in the above command is the number it waits for self deletion.
 
 ## Lessons Learnt
-This was an engaging lab which through a single has we realized the importance of simple threat intel from VirusTotal to some further analysis on any run. The file is an info stealer which used a C2 for point of download itself and its related dll files. It also used RC4 encryption and after executing it opened cmd shell to self delete together with all .dll files.
+This was an engaging lab which through a single hash we realized the importance of simple threat intel from VirusTotal to some further analysis on any run. The file is an info stealer which used a C2 for point of downloading itself and its related dll files. It also used RC4 encryption and after executing it opened cmd shell to self delete together with all .dll files.
 
 ## Comments
 
