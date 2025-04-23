@@ -2,7 +2,7 @@
 links:
   - title: Dexter
     description: Dexter yaay
-    website: https://w47.site/
+    website: https://w-47.github.io/blog/
     image: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
   - title: Boynamedboy
     description: Boynamedboy's blog.
