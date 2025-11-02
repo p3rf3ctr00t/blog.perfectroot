@@ -8,6 +8,7 @@ Categories: CTFs, Templates
 author: Dexter
 comments: true
 draft: true
+tags: ["TEST" , "SAMPLE"]
 ---
 
 ## Introduction to Challenge
