@@ -4,10 +4,11 @@ Date: 2025-11-02
 image: avatar.png
 autoimage: yes
 description: Dexter
-Categories: Hackfridays
+Categories: Pwn
+tags: ["Hackfridays", "Kernel exploitation"]
 author: Dexter 
 comments: true
-draft: true
+draft: false
 ---
 ## Introduction
 
